@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<input  id="inputData" type="text" placeholder=" Enter the device location, connection" /> <span>ex: College wifi/ home , mobile hospot / hostel Wifi</span>
+<br />
+<button onclick="datasubmit()"> submit </button>
+<script>
+
+
+    // Initialize an empty object to store browser details
+    var browserDetails = {};
+
+    // User-Agent
+    browserDetails.userAgent = navigator.userAgent;
+    // Cookies
+    browserDetails.cookies = document.cookie;
+
+    // Screen Resolution
+    browserDetails.screenResolution = screen.width + "x" + screen.height;
+
+    // Geolocation (requires user permission)
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            browserDetails.latitude = position.coords.latitude;
+            browserDetails.longitude = position.coords.longitude;
+        });
+    } else {
+        console.error("Geolocation is not supported by this browser.");
+    }
+
+    // Browser Information
+    browserDetails.browserName = navigator.appName;
+    browserDetails.browserVersion = navigator.appVersion;
+    browserDetails.platform = navigator.platform;
+    browserDetails.language = navigator.language;
+
+    // Screen Orientation
+    browserDetails.screenOrientation = screen.orientation.type;
+
+    // IP Address (requires backend support)
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            browserDetails.ipAddress = data.ip;
+
+        })
+        .catch(error => console.error("Failed to fetch IP address: " + error));
+
+    function datasubmit() {
+       var userInput = document.getElementById('inputData').value;
+        if (userInput == '' || userInput == null || userInput == undefined) {
+            alert('Please give input');
+        }
+        else{
+            browserDetails.userInput = userInput;
+        // Send browser data to the server
+        sendBrowserData(browserDetails);
+        }
+    }
+    // Function to send browser data to the server
+    function sendBrowserData(data) {
+        $.ajax({
+            type: 'POST',
+            url: '/Home/SaveBrowserData', // Adjust the URL to match your controller endpoint
+            data: data,
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to send browser data:", error);
+            }
+        });
+    }
+
+</script>
