@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Test_Application</RootNamespace>
+  <PublishRelease>true</PublishRelease>
   </PropertyGroup>
 
   <ItemGroup>
