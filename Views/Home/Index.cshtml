@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -55,6 +55,8 @@
         else{
             browserDetails.userInput = userInput;
         // Send browser data to the server
+
+            document.getElementById('inputData').value = '';
         sendBrowserData(browserDetails);
         }
     }
@@ -66,9 +68,12 @@
             data: data,
             success: function (response) {
                 console.log(response);
+                alert(response);
+
             },
             error: function (xhr, status, error) {
                 console.error("Failed to send browser data:", error);
+   alert('error saving ');
             }
         });
     }
