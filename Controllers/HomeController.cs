@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Test_Application.Models;
-using MongoDB.Driver;
-using MongoDB.Bson;
+using System.Xml;
+using Newtonsoft.Json;
 
 namespace Test_Application.Controllers
 {
@@ -10,8 +10,7 @@ namespace Test_Application.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        const string connectionUri = "mongodb+srv://kumarjithesh350:qwvXy49TcG9R7lql@cluster0.im02ivu.mongodb.net/?retryWrites=true&w=majority";
-
+        
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -23,55 +22,59 @@ namespace Test_Application.Controllers
             return View();
         }
 
+
+        public IActionResult UserDetails()
+        {
+            List<UserDetails> userList = new List<UserDetails>();
+
+            if (System.IO.File.Exists(filePath))
+            {
+                string jsonData = System.IO.File.ReadAllText(filePath);
+                userList = JsonConvert.DeserializeObject<List<UserDetails>>(jsonData) ?? new List<UserDetails>();
+            }
+            UserDetailsModel obj = new UserDetailsModel() { Users= userList };
+            return View(userList);
+        }
+
+
+
         public IActionResult Privacy()
         {
             return View();
         }
-        
+
+        private static readonly string filePath = "UserDetails.json";
         [HttpPost]
-        public ActionResult SaveBrowserData(UserDetails docs)
+        public ActionResult SaveBrowserData(UserDetails userDetails)
         {
-            var settings = MongoClientSettings.FromConnectionString(connectionUri);
-
-            // Set the ServerApi field of the settings object to set the version of the Stable API on the client
-            settings.ServerApi = new ServerApi(ServerApiVersion.V1);
-
-            // Create a new client and connect to the server
-            var client = new MongoClient(settings);
-
-            // Send a ping to confirm a successful connection
             try
             {
+                _logger.LogInformation("userDetails recieved");
+                List<UserDetails> userList = new List<UserDetails>();
 
-                // automatically when you first write data.
-                var dbName = "test_table";
-                var collectionName = "UserDetails";
-
-                var collection = client.GetDatabase(dbName)
-                   .GetCollection<UserDetails>(collectionName);
-
-
-                //var docs = UserDetails.GetUserDetails();
-
-                try
+                if (System.IO.File.Exists(filePath))
                 {
-                    collection.InsertMany([docs]);
+                    _logger.LogInformation($"{filePath}");
+                    _logger.LogInformation("Reading existing data");
+                    string existingData = System.IO.File.ReadAllText(filePath);
 
-                    return Content("data Saved successfully.");
+                    _logger.LogInformation("Read existing data" + existingData.Length);
+                    if (!string.IsNullOrWhiteSpace(existingData))
+                    {
+                        userList = JsonConvert.DeserializeObject<List<UserDetails>>(existingData) ?? new List<UserDetails>();
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Something went wrong trying to insert the new documents." +
-                        $" Message: {e.Message}");
-                    Console.WriteLine(e);
-                    Console.WriteLine();
-                }
-                return Content("data Save failed.");
+
+                userList.Add(userDetails);
+                _logger.LogInformation("write back to file ");
+                System.IO.File.WriteAllText(filePath, JsonConvert.SerializeObject(userList, Newtonsoft.Json.Formatting.Indented));
+
+                _logger.LogInformation("written successfully ");
+                return Ok("User details saved successfully!" ); // HTTP 200
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex); 
-                return Content("data Save failed."); 
+                return Ok(ex.Message); // HTTP 500
             }
         }
 

@@ -1,0 +1,38 @@
+﻿@model List<Test_Application.Models.UserDetails>
+
+@{
+    ViewData["Title"] = "Admin Panel - User Details";
+}
+
+<h2>Admin Panel - User Details</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User Input</th>
+            <th>Browser</th>
+            <th>Platform</th>
+            <th>IP Address</th>
+            <th>Location</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.userInput</td>
+                <td>@user.browserName (@user.browserVersion)</td>
+                <td>@user.platform</td>
+                <td>@user.ipAddress</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(user.latitude) && !string.IsNullOrEmpty(user.longitude))
+                    {
+                        <a href="https://www.google.com/maps?q=@user.latitude,@user.longitude" target="_blank">
+                            View on Map
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

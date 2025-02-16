@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\kumar\Desktop\ipcheker_publish</_PublishTargetUrl>
+    <History>True|2025-02-16T08:16:54.2782986Z||;False|2025-02-16T13:46:45.2718158+05:30||;True|2025-02-16T13:40:27.4678175+05:30||;True|2025-02-16T13:18:56.9355271+05:30||;False|2025-02-16T13:18:39.6114615+05:30||;False|2025-02-16T13:18:03.5195981+05:30||;False|2025-02-16T13:17:50.3522421+05:30||;False|2025-02-16T13:17:36.3378481+05:30||;True|2025-02-16T12:58:26.1221047+05:30||;True|2025-02-16T12:58:16.7843420+05:30||;True|2025-02-16T12:57:54.7807621+05:30||;True|2025-02-16T07:59:17.8604591+05:30||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
